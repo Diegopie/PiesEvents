@@ -6,7 +6,7 @@ A birthday party planning site where guests can view events, discover activities
 
 | Layer         | Choice                                              |
 | ------------- | --------------------------------------------------- |
-| **Framework** | React Router v7 (framework mode, SPA — no SSR)     |
+| **Framework** | React Router v7 (framework mode, SSR)               |
 | **ORM**       | Drizzle                                             |
 | **Database**  | PostgreSQL (Supabase free tier)                     |
 | **Auth**      | Supabase email OTP + `is_admin` in JWT app_metadata |
@@ -16,38 +16,33 @@ A birthday party planning site where guests can view events, discover activities
 ## Data Model
 
 ```
-users
-  ├── id, name, email, phone
+profiles
+  ├── id (UUID, PK + FK → auth.users.id), display_name, phone, avatar_url
 
 events
-  ├── id, name, description, date, location, is_public
+  ├── id, created_by (FK → profiles), name, description, start_date, end_date, location, published
 
 activities
-  ├── id, event_id (FK → events), name, description, start_time, location, is_public
+  ├── id, event_id (FK → events), created_by (FK → profiles)
+  ├── name, description, start_time, end_time, location
+  ├── published, public, max_capacity, sort_order
 
-event_invitations       — who can see which event
-  ├── user_id (FK), event_id (FK)
-
-activity_invitations    — who can see which exclusive activity
-  ├── user_id (FK), activity_id (FK)
-
-rsvps
-  ├── user_id (FK), activity_id (FK), status (going | not_going | maybe)
+event_invitations       — who can see which event         PK(user_id, event_id)
+activity_invitations    — who can see exclusive activities PK(user_id, activity_id)
+rsvps                   — guest responses                 PK(user_id, activity_id)
+  ├── status (going | not_going | maybe), plus_count, note
 ```
 
-### Visibility Rules
+> Full schema, visibility queries, and cascade behavior: [`docs/data-model.md`](docs/data-model.md)
 
-- A guest sees an **event** only if they have a row in `event_invitations`
-- A guest sees an **activity** if:
-  - `is_public = true` AND they're invited to the parent event, **OR**
-  - They have an explicit row in `activity_invitations`
-- This allows exclusive/hidden activities within a public event
+### Key Decisions
 
-### Auth Flow
-
-- Everyone logs in via **Supabase email OTP** (magic code)
-- Admin (host) has `is_admin: true` set in Supabase `app_metadata` → included in JWT
-- Loaders/actions check the JWT claim to gate admin routes
+- **No `users` table** — email in `auth.users`, display info in `profiles`, admin flag in JWT `app_metadata`
+- **No event-level RSVPs** — event attendance derived from activity RSVPs
+- **`published`** on events + activities — draft/live control for admin
+- **`public`** on activities only — event visibility is purely invitation-based
+- **Composite PKs** on join tables — enforces one invitation/RSVP per user at DB level
+- **Pre-create auth users** on invite via Supabase admin API — clean FKs everywhere
 
 ## Setup
 
