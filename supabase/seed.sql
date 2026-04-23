@@ -126,6 +126,38 @@ INSERT INTO public.activities (id, event_id, created_by, name, description, star
   3
 );
 
+-- Smash Bros Tournament
+INSERT INTO public.activities (id, event_id, created_by, name, description, start_time, end_time, location, published, public, sort_order) VALUES
+(
+  'd1111111-1111-1111-1111-111111111111',
+  'e1111111-1111-1111-1111-111111111111',
+  'a1111111-1111-1111-1111-111111111111',
+  'Smash Bros Tournament',
+  'Think you can beat the birthday boy? Sign up and prove it. Single elimination. Winner gets glory.',
+  '2026-07-11 14:00:00+00',
+  '2026-07-11 18:00:00+00',
+  'Diego''s Place',
+  true,
+  true,
+  4
+);
+
+-- Hot Wings Challenge
+INSERT INTO public.activities (id, event_id, created_by, name, description, start_time, end_time, location, published, public, sort_order) VALUES
+(
+  'd2222222-2222-2222-2222-222222222222',
+  'e1111111-1111-1111-1111-111111111111',
+  'a1111111-1111-1111-1111-111111111111',
+  'Hot Wings Challenge',
+  '10 wings. 10 levels of pain. No milk until the end. Sign up if you dare.',
+  '2026-07-11 13:00:00+00',
+  '2026-07-11 14:00:00+00',
+  'Diego''s Place',
+  true,
+  true,
+  5
+);
+
 -- ─── Event Invitations ───────────────────────────────────────────────────────
 
 -- Guest is invited to the event
@@ -161,3 +193,15 @@ INSERT INTO public.rsvps (user_id, activity_id, status, plus_count) VALUES
 ('a1111111-1111-1111-1111-111111111111', 'c1111111-1111-1111-1111-111111111111', 'going', 0),
 ('a1111111-1111-1111-1111-111111111111', 'c2222222-2222-2222-2222-222222222222', 'going', 0),
 ('a1111111-1111-1111-1111-111111111111', 'c3333333-3333-3333-3333-333333333333', 'going', 0);
+
+-- ─── Signups ─────────────────────────────────────────────────────────────────
+-- Smash Bros contenders
+INSERT INTO public.signups (activity_id, name) VALUES
+('d1111111-1111-1111-1111-111111111111', 'Diego'),
+('d1111111-1111-1111-1111-111111111111', 'Alex'),
+('d1111111-1111-1111-1111-111111111111', 'Jordan');
+
+-- Hot Wings challengers
+INSERT INTO public.signups (activity_id, name) VALUES
+('d2222222-2222-2222-2222-222222222222', 'Diego'),
+('d2222222-2222-2222-2222-222222222222', 'Sam');
