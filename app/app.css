@@ -1,3 +1,26 @@
-@tailwind base;
-@tailwind components;
+/* @tailwind base;
+@tailwind components; */
 @tailwind utilities;
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+html.dark body {
+  background-color: #1a1a1a;
+  color: #e5e5e5;
+}
+
+html.dark a {
+  color: #93c5fd;
+}
+
+html.dark a:visited {
+  color: #c4b5fd;
+} 
